@@ -1,3 +1,4 @@
+
 class Tile:
     num = None
     candidates = []
@@ -23,11 +24,27 @@ class Tile:
             self.row.in_group.append(self.num)
             self.column.in_group.append(self.num)
             self.square.in_group.append(self.num)
+            update_candidates(self.board)
+            self.board.updated = True
+        else:
+            for cand in self.candidates:
+                if cand in unique_in_group(self.row) or cand in unique_in_group(self.column) or cand in unique_in_group(self.square):
+                     self.num = cand
+                     self.candidates = []
+                     self.row.in_group.append(self.num)
+                     self.column.in_group.append(self.num)
+                     self.square.in_group.append(self.num)
+                     update_candidates(self.board)
+                     self.board.updated = True
+                     return
+
 class Board:
     tiles = None
     rows =[]
     cols = []
     name = 'Aniruddh\'s Sudoku Board'
+    updated = True
+    incomplete = True
     def __init__(self, tiles):
         self.squares = [Square() for _ in range(9)]
         for i in range(0,len(tiles)):
@@ -74,8 +91,10 @@ class Board:
         for r in self.tiles:
             for t in r:
                 if t.num == None:
-                    return False
-        return True
+                    self.incomplete = True
+                    return True
+        self.incomplete = False
+        return False
 class Row:
     tiles = []
     def __init__(self, tiles):
@@ -136,13 +155,60 @@ class Square:
 
 # 31 none
 my_tiles = [
-[0,7,0,0,0,0,0,2,0],
-[9,6,0,7,3,2,8,4,0],
-[1,0,0,0,0,0,0,0,9],
-[0,0,0,3,7,1,0,8,0],
-[0,0,0,4,2,6,0,0,0],
-[0,0,0,0,8,0,0,0,0],
-[0,9,0,8,0,4,7,0,0],
-[0,3,0,0,0,0,4,0,0],
-[0,2,4,0,6,0,0,0,0]]
+[0,2,7,5,0,8,0,0,0],
+[6,0,0,0,0,0,9,5,7],
+[0,0,0,6,0,0,0,0,0],
+[8,0,0,3,0,0,4,9,0],
+[0,0,0,0,0,2,0,1,0],
+[9,0,3,4,0,0,0,0,6],
+[3,4,5,1,0,0,0,7,0],
+[2,0,0,0,0,4,0,0,0],
+[0,0,1,8,0,6,0,0,4]]
 my_board = Board(my_tiles)
+def check_group(group):
+    def check(el):
+        return el not in group.in_group
+    for tile in group.tiles:
+        if tile.candidates:
+            tile.candidates = list(filter(check, tile.candidates))
+def update_candidates(board):
+    for row in board.rows:
+        check_group(row)
+    for col in board.cols:
+        check_group(col)
+    for square in board.squares:
+        check_group(square)
+def unique_in_group(group):
+    nested = [tile.candidates for tile in group.tiles if not tile.num]
+    all_candidates = [item for sublist in nested for item in sublist]
+    all_candidates = convert_to_dict(all_candidates)
+    unique_candidates = []
+    for cand, freq in all_candidates.items():
+        if freq == 1:
+            unique_candidates.append(cand)
+    return unique_candidates
+def convert_to_dict(my_list):
+    freq = {}
+    for items in my_list:
+        freq[items] = my_list.count(items)
+    return freq
+def update_tiles(board):
+    for row in board.tiles:
+        for tile in row:
+            tile.update()
+def update_board(board):
+    board.updated = False
+    update_candidates(board)
+    update_tiles(board)
+    board.check_complete()
+    return board
+def solve(board):
+    iters = 0
+    while board.incomplete and board.updated and iters < 20:
+        update_board(board)
+        iters+= 1
+    if board.incomplete:
+        print(f'Sorry, I couldn\'t solve the board in {iters} tries. Here is the partially solved version:')
+    else:
+        print(f'I solved the board in {iters} tries. Here it is:')
+    return board
