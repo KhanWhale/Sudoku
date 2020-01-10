@@ -20,9 +20,9 @@ class Tile:
         if len(self.candidates) == 1:
             self.num = self.candidates[0]
             self.candidates = []
-            self.row.in_row.append(self.num)
-            self.column.in_col.append(self.num)
-            self.square.in_square.append(self.num)
+            self.row.in_group.append(self.num)
+            self.column.in_group.append(self.num)
+            self.square.in_group.append(self.num)
 class Board:
     tiles = None
     rows =[]
@@ -79,11 +79,11 @@ class Board:
 class Row:
     tiles = []
     def __init__(self, tiles):
-        self.in_row = []
+        self.in_group = []
         for tile in tiles:
             tile.row = self
             if tile.num:
-                self.in_row.append(tile.num)
+                self.in_group.append(tile.num)
         self.tiles = tiles
     def __repr__(self):
         out = ''
@@ -97,11 +97,11 @@ class Row:
 class Column:
     tiles = []
     def __init__(self, tiles):
-        self.in_col = []
+        self.in_group = []
         for tile in tiles:
             tile.column = self
             if tile.num:
-                self.in_col.append(tile.num)
+                self.in_group.append(tile.num)
         self.tiles = tiles
     def __repr__(self):
         out = ''
@@ -114,13 +114,13 @@ class Column:
         return out
 class Square:
     def __init__(self):
-        self.in_square = []
+        self.in_group = []
         self.tiles = []
     def add(self, tile):
         self.tiles.append(tile)
         tile.square = self
         if tile.num:
-            self.in_square.append(tile.num)
+            self.in_group.append(tile.num)
     def __repr__(self):
         out = ''
         for i in range(len(self.tiles)):
@@ -136,13 +136,13 @@ class Square:
 
 # 31 none
 my_tiles = [
-[1,0,0,0,0,0,6,0,5],
-[0,0,2,0,1,7,0,0,9],
-[4,0,0,2,0,0,7,0,8],
-[7,0,0,4,0,0,1,0,3],
-[8,0,4,0,0,0,0,0,0],
-[0,2,5,0,0,9,0,0,0],
-[0,6,0,0,3,0,2,0,0],
-[0,0,1,5,0,0,3,0,0],
-[0,0,0,6,9,8,0,7,0]]
+[0,7,0,0,0,0,0,2,0],
+[9,6,0,7,3,2,8,4,0],
+[1,0,0,0,0,0,0,0,9],
+[0,0,0,3,7,1,0,8,0],
+[0,0,0,4,2,6,0,0,0],
+[0,0,0,0,8,0,0,0,0],
+[0,9,0,8,0,4,7,0,0],
+[0,3,0,0,0,0,4,0,0],
+[0,2,4,0,6,0,0,0,0]]
 my_board = Board(my_tiles)
