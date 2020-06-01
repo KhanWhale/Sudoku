@@ -164,7 +164,6 @@ public class Board {
         }
         updateCandidates();
         updateTiles();
-        dump();
         isComplete();
         return this;
     }
