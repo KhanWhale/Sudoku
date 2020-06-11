@@ -1,5 +1,8 @@
 import java.awt.*;        // Uses AWT's Layout Managers
 import java.awt.event.*;  // Uses AWT's Event Handlers
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Scanner;
 //import java.util.concurrent.Flow;
 import javax.swing.*;     // Uses Swing's Container/Components
 
@@ -96,22 +99,27 @@ public class GUI extends JFrame {
     /** The entry main() entry method */
     public static void main(String[] args) {
         // [TODO 1] (Now)
-        int[][] puzzle =
-                {       {0, 0, 3, 0, 5, 0, 0, 0, 0},
-                        {0, 0, 2, 0, 4, 0, 5, 0, 0},
-                        {9, 0, 0, 0, 0, 0, 0, 0, 0},
-                        {0, 4, 0, 0, 2, 0, 0, 0, 0},
-                        {0, 0, 0, 0, 0, 8, 4, 0, 0},
-                        {0, 0, 8, 0, 0, 7, 0, 0, 1},
-                        {0, 0, 0, 0, 9, 2, 0, 0, 8},
-                        {0, 8, 5, 0, 0, 0, 1, 0, 0},
-                        {1, 2, 0, 5, 0, 0, 0, 3, 0}};
-
+        int[][] puzzle = scanPuzzle("flash");
         GUI myGUI = new GUI(puzzle);
 //        myGUI._myBoard.solve();
 //        myGUI._solution = myGUI._myBoard._tiles;
     }
-    public int[][] scanPuzzle() {
+    public static int[][] scanPuzzle(String diff) {
+        File puzzleFile = new File("puzzles/" + diff + "1.pz");
+        if (puzzleFile.exists()){
+            try {
+                Scanner puzzleScanner = new Scanner(puzzleFile);
+                int [][] myPuzzle = new int[9][9];
+                for (int i = 0; i < 9; i += 1) {
+                    for (int j = 0; j < 9; j += 1) {
+                       myPuzzle[i][j] = puzzleScanner.nextInt();
+                    }
+                }
+                return myPuzzle;
+            } catch(FileNotFoundException f){
+                return null;
+            }
+        }
         return null;
     }
     // Define the Listener Inner Class
