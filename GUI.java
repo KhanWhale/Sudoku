@@ -111,7 +111,9 @@ public class GUI extends JFrame {
 //        myGUI._myBoard.solve();
 //        myGUI._solution = myGUI._myBoard._tiles;
     }
-
+    public int[][] scanPuzzle() {
+        return null;
+    }
     // Define the Listener Inner Class
     // ... [TODO 2] (Later) ...
     // [TODO 2]
@@ -119,6 +121,7 @@ public class GUI extends JFrame {
     private class SolveListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
+            System.out.println("Action performed");
             _myBoard.solve();
             _solution = _myBoard._tiles;
             for (int row = 0; row < GRID_SIZE; ++row) {

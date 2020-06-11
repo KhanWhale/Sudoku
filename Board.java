@@ -25,6 +25,7 @@
 //    }
 //}
 
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -185,14 +186,31 @@ public class Board {
     public void solve() {
         int iters = 0;
 //        "The smart approach"
-        while (this.incomplete &&  this.updated && iters< 25) {
+        while (this.incomplete && this.updated && iters < 25) {
             updateBoard();
+            for (Row r : _rows) {
+                if (!r.isValid()) {
+                    System.out.println("Invalid Row");
+                    return;
+                }
+            }
+            for (Column c : _cols) {
+                if (!c.isValid()) {
+                    System.out.println("Invalid col");
+                    return;
+                }
+            }
+            for (Square s : _squares) {
+                if (!s.isValid()) {
+                    System.out.println("Invalid sq");
+                    return;
+                }
+            }
             iters += 1;
         }
 //        Backtracking - brute force
 
     }
-
     public void backtrack() {
         for (Tile[] row : _tiles) {
             for (Tile t : row) {

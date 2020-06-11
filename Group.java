@@ -20,21 +20,47 @@ public class Group {
         }
         _solved = false;
     }
+
+    public boolean isValid() {
+        HashMap<Integer, Integer> occurrences = new HashMap<>();
+        if (_tiles != null){
+            for (Tile t : _tiles) {
+               if (t._num != 0) {
+                   if (occurrences.containsKey(t._num)){
+                      return false;
+                   } else {
+                       occurrences.put(t._num, 1);
+                   }
+               }
+            }
+        }
+        return true;
+    }
+
+    public boolean checkSolved() {
+       if (!isValid()) {
+           return false;
+       } else {
+           HashMap<Integer, Integer> occurrences = new HashMap<>();
+           if (_tiles != null){
+               for (Tile t : _tiles) {
+                   if (t._num != 0) {
+                       return false;
+                   } else if(occurrences.containsKey(t._num)) {
+                       return false;
+                   } else {
+                       occurrences.put(t._num, 1);
+                   }
+               }
+           }
+           return occurrences.size() == 9;
+       }
+    }
     public Tile[] get_tiles() {
         return _tiles;
     }
 
-    public boolean isSolved() {
-        return _solved;
-    }
 
-    public void setSolved(boolean solved) {
-        _solved =  _solved || solved;
-    }
-    public void setTiles(Tile[] tiles) {
-        _tiles = tiles;
-        return;
-    }
     public void addTile(Tile tile) {
         if (tileIndex >= _tiles.length) {
             System.exit(1);
